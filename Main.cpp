@@ -205,9 +205,9 @@ int main()
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 
 	int months = 12, days = 0, hours = 24;
-	int count = 0;
-	Activity**** Calender;
-	Calender = new Activity * **[months];
+    int count = 0;
+    Activity**** Calender;
+    Calender = new Activity*** [months];
 
 
 	for (int i = 0; i < months; i++)
@@ -224,7 +224,7 @@ int main()
 		{
 			days = 30;
 		}
-		Calender[i] = new Activity * *[days];
+		Calender[i] = new Activity **[days];
 		for (int j = 0; j < days; j++)
 		{
 			Calender[i][j] = new Activity * [hours];
@@ -242,38 +242,38 @@ int main()
 		cout << "1) Print the calendar." << endl;
 		cin >> choice;
 		cout << endl;
-		if (choice == 1)
+		if(choice==1)
 		{
 			Print_Calender(Calender);
 		}
-		else if (choice == 2)
+		else if(choice==2)
 		{
-		}
-		else if (choice == 3)
-		{
-		}
-		else if (choice == 4)
-		{
-		}
-		else if (choice == 5)
-		{
-		}
-		else if (choice == 6)
-		{
-		}
-		else if (choice == 7)
-		{
-		}
-		else if (choice == 8)
-		{
-		}
-		else if (choice == 9)
-		{
-		}
-		else
-		{
-			cout << "Invalid Value" << endl;
-		}
-	}
+	    }
+	    else if(choice==3)
+	    {
+	    }
+	    else if(choice==4)
+	    {
+	    }
+	    else if(choice==5)
+	    {
+	    }
+	    else if(choice==6)
+	    {
+	    }
+	    else if(choice==7)
+	    {
+	    }
+	    else if(choice==8)
+	    {
+	    }
+	    else if(choice==9)
+	    {
+	    }
+	    else
+	    {
+	    	cout<<"Invalid Value"<<endl;
+	    }
+    }
 	return 0;
 }
