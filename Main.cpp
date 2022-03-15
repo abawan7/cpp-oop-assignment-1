@@ -26,9 +26,9 @@ void setCursorPointer(int x = 0, int y = 0)
 	SetConsoleCursorPosition(handle, coordinates);
 }
 
-void split(string act) {
+void split(string &act) {
 
-	string day, month , start_time , end_time;
+	string day, month, start_time, end_time , user_id, act_id, title, priority;
 	int space = 0;
 	int n = 0;
 	int count = 0;
@@ -43,27 +43,56 @@ void split(string act) {
 			}
 		}
 	}
+	bool flag = true;
 	for (int i = n; i < act.size(); i++) {
+		flag = true;
 		if (act[i] != ',' && count == 0) {
-				month += act[i];
+			month += act[i];
 		}
-		else if (act[i] == ',') {
-			count++;
+		else if (act[i] == ',' && count == 0) {
+			flag = false;
 		}
 		if (act[i] != ',' && count == 1) {
 			start_time += act[i];
 		}
-		else if (act[i] == ','){
-			count++;
+		else if (act[i] == ',' && count == 1) {
+			flag = false;
 		}
 		if (act[i] != ',' && count == 2) {
 			end_time += act[i];
 		}
-		else if (act[i] == ',') {
+		else if (act[i] == ',' && count == 2) {
+			flag = false;
+		}
+		if (act[i] != ',' && count == 3) {
+			user_id += act[i];
+		}
+		else if (act[i] == ',' && count == 3) {
+			flag = false;
+		}
+		if (act[i] != ',' && count == 4) {
+			act_id += act[i];
+		}
+		else if (act[i] == ',' && count == 4) {
+			flag = false;
+		}
+		if (act[i] != ',' && count == 5) {
+			title += act[i];
+		}
+		else if (act[i] == ',' && count == 5) {
+			flag = false;
+		}
+		if (act[i] != ',' && count == 6) {
+			priority += act[i];
+		}
+		else if (act[i] == ',' && count == 6) {
+			flag = false;
+		}
+		if (flag == false) {
 			count++;
 		}
 	}
-	cout << day << " " << month << " " << start_time << " " << end_time;
+	cout <<"DAY: " << day << " Month: " << month << " Start time: " << start_time << " End Time: " << end_time << " User Id: " << user_id << " Activity Id: " << act_id << " title: " << title << " Priority: " << priority << endl;
 }
 
 void Print_Calender(Activity**** Calender)
@@ -266,8 +295,11 @@ int main()
 		cout << "File not created!" << endl;
 	}
 	else {
-		cout << "File created successfully!";
-		activity << "09/11,11,14,user1,act33,Gym,0.22";
+		cout << "File created successfully!" << endl;
+		cout << "User Are Given Below: " << endl;
+		activity << "09/10,11,14,user1,act33,Gym,0.22" << endl;
+		activity << "02/21,10,13,user1,act23,Play Cricket,0.12" << endl;
+		activity << "09/10,11,18,user1,act144,Study for Exam,0.00009";
 		activity.close();
 	}
 
