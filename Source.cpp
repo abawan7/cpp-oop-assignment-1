@@ -26,73 +26,42 @@ void setCursorPointer(int x = 0, int y = 0)
 	SetConsoleCursorPosition(handle, coordinates);
 }
 
-void split(string &act) {
+void split(string& act, int &Day, int &Months ,int &Start_time,int &End_time, float &Priority, string &User_Id,string &Activity_Id,string &Title)
+{
+	int Position;
 
-	string day, month, start_time, end_time , user_id, act_id, title, priority;
-	int space = 0;
-	int n = 0;
-	int count = 0;
-	for (int i = 0; i < act.size(); i++) {
-		{
-			if (act[i] != '/') {
-				day += act[i];
-			}
-			else if (act[i] == '/') {
-				n = i + 1;
-				break;
-			}
-		}
-	}
-	bool flag = true;
-	for (int i = n; i < act.size(); i++) {
-		flag = true;
-		if (act[i] != ',' && count == 0) {
-			month += act[i];
-		}
-		else if (act[i] == ',' && count == 0) {
-			flag = false;
-		}
-		if (act[i] != ',' && count == 1) {
-			start_time += act[i];
-		}
-		else if (act[i] == ',' && count == 1) {
-			flag = false;
-		}
-		if (act[i] != ',' && count == 2) {
-			end_time += act[i];
-		}
-		else if (act[i] == ',' && count == 2) {
-			flag = false;
-		}
-		if (act[i] != ',' && count == 3) {
-			user_id += act[i];
-		}
-		else if (act[i] == ',' && count == 3) {
-			flag = false;
-		}
-		if (act[i] != ',' && count == 4) {
-			act_id += act[i];
-		}
-		else if (act[i] == ',' && count == 4) {
-			flag = false;
-		}
-		if (act[i] != ',' && count == 5) {
-			title += act[i];
-		}
-		else if (act[i] == ',' && count == 5) {
-			flag = false;
-		}
-		if (act[i] != ',' && count == 6) {
-			priority += act[i];
-		}
-		else if (act[i] == ',' && count == 6) {
-			flag = false;
-		}
-		if (flag == false) {
-			count++;
-		}
-	}
-	cout <<"DAY: " << day << " Month: " << month << " Start time: " << start_time << " End Time: " << end_time << " User Id: " << user_id << " Activity Id: " << act_id << " title: " << title << " Priority: " << priority << endl;
+	Position = act.find('/');
+	Day = atoi((act.substr(0, Position)).c_str());
+	act.erase(0, Position + 1);
+
+	Position = act.find(',');
+	Months = atoi((act.substr(0, Position)).c_str());
+	act.erase(0, Position + 1);
+
+	Position = act.find(',');
+	Start_time = atoi((act.substr(0, Position)).c_str());
+	act.erase(0, Position + 1);
+
+	Position = act.find(',');
+	End_time = atoi((act.substr(0, Position)).c_str());
+	act.erase(0, Position + 5);
+
+	Position = act.find(',');
+	User_Id = act.substr(0, Position);
+	act.erase(0, Position + 1);
+
+	Position = act.find(',');
+	Activity_Id = act.substr(0, Position);
+	act.erase(0, Position + 1);
+
+	Position = act.find(',');
+	Title = act.substr(0, Position);
+	act.erase(0, Position + 1);
+
+	Position = act.find(',');
+	Priority = atof((act.substr(0)).c_str());
+
+	int Duration = End_time - Start_time;
 }
 
 void Print_Calender(Activity**** Calender)
@@ -277,15 +246,33 @@ void Print_Calender(Activity**** Calender)
 	}
 }
 
+void list_all_activity() {
+	string userid;
+	int starttime, endtime;
+	cout << "Enter User Id: ";
+	cin >> userid;
+	cout << "Enter Start Time: ";
+	cin >> starttime;
+	cout << "Enter End Time: ";
+	cin >> endtime;
 
+}
 int main()
 {
 	ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
 
-	int months = 12, days = 0, hours = 24;
-	int count = 0;
-	Activity**** Calender;
-	Calender = new Activity * **[months];
+	int Day=0, Months=0;
+	int Start_time = 0, End_time = 0;
+
+	float Priority;
+
+	string User_Id;
+	string Activity_Id;
+	string Title;
+
+	int months = 12, days = 0, hours = 24, act1 = 1;
+
+
 
 	string act;
 
@@ -298,16 +285,21 @@ int main()
 		cout << "File created successfully!" << endl;
 		cout << "User Are Given Below: " << endl;
 		activity << "09/10,11,14,user1,act33,Gym,0.22" << endl;
-		activity << "02/21,10,13,user1,act23,Play Cricket,0.12" << endl;
+		activity << "02/12,10,13,user1,act23,Play Cricket,0.12" << endl;
 		activity << "09/10,11,18,user1,act144,Study for Exam,0.00009";
 		activity.close();
 	}
 
 	ifstream Fetch("Activity");
 	while (getline(Fetch, act)) {
-		split(act);
+		split(act, Day, Months, Start_time, End_time, Priority, User_Id, Activity_Id, Title);
 	}
 	activity.close();
+
+	int Duration = End_time - Start_time;
+
+	Activity**** Calender;
+	Calender = new Activity *** [months];
 
 	for (int i = 0; i < months; i++)
 	{
@@ -323,16 +315,24 @@ int main()
 		{
 			days = 30;
 		}
-		Calender[i] = new Activity * *[days];
+		Calender[i] = new Activity **[days];
 		for (int j = 0; j < days; j++)
 		{
-			Calender[i][j] = new Activity * [hours];
+			Calender[i][j] = new Activity *[hours];
 			for (int k = 0; k < hours; k++)
 			{
-				Calender[i][j][k] = NULL;
+				Activity* act_node = new Activity();
+				act_node->activity_Id = Activity_Id;
+				act_node->user_Id= User_Id;
+				act_node->title = Title;
+				act_node->priority = Priority;
+				act_node->duration = Duration;
+				Calender[i][j][k] = act_node;
 			}
 		}
 	}
+
+	cout << "Duration: " << Calender[Months][Day][Start_time]->duration << " User Id: " << Calender[Months][Day][Start_time]->user_Id << " Activity Id: " << Calender[Months][Day][Start_time]->activity_Id << " title: " << Calender[Months][Day][Start_time]->title << " Priority: " << Calender[Months][Day][Start_time]->priority << endl;
 
 	while (1)
 	{
@@ -353,7 +353,7 @@ int main()
 		cout << endl;
 		if (choice == 1)
 		{
-
+			list_all_activity();
 		}
 		else if (choice == 2)
 		{
