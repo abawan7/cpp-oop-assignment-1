@@ -363,10 +363,9 @@ void list_of_users(Activity**** Calender) {
 				{
 					if (Calender[i][j][k] != NULL)
 					{
-						for (int l = 0; Calender[i][j][k][l].title != ""; l++)
+						for (int l = 0; Calender[i][j][k][l].title == ""; l++)
 						{
 							cout << "User: " << Calender[i][j][k][l].user_Id << endl;
-							count++;
 						}
 					}
 				}
@@ -447,8 +446,6 @@ void Important_activities(Activity**** Calender) {
 				}
 			}
 		}
-
-		Activity* arr = new Activity[count];
 		int counter = 0;
 		float prt[5000] = { 0 };
 		if (count > 0) {
@@ -503,7 +500,7 @@ void Important_activities(Activity**** Calender) {
 				}
 				for (int i = 0; i < counter && i < 5; i++)
 				{
-					cout << arr[i].title << " (" << prt[i] << ")" << endl;
+					cout << prt[i] << endl;
 				}
 			}
 		}
