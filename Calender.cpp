@@ -379,7 +379,60 @@ void list_of_users(Activity**** Calender) {
 }
 
 void longest_free_period(Activity**** Calender) {
+	string User_Id;
+	int count = 0, Days = 0;
+	int position;
+	string start = "01/01", end = "30/12";
+	int start_month = 0, end_month = 0, start_date = 0, end_date = 0;
 
+	cout << "Enter the ID of the User whose Activities are to be Displayed" << endl;
+	cin >> User_Id;;
+
+	position = start.find('/');
+	start_date = atoi((start.substr(0, position)).c_str());
+	start_date--;
+	start.erase(0, position + 1);
+	start_month = atoi((start.substr(0, position + 1)).c_str());
+	start_month--;
+
+	position = end.find('/');
+	end_date = atoi((end.substr(0, position)).c_str());
+	end.erase(0, position + 1);
+	end_month = atoi((end.substr(0, position + 1)).c_str());
+	count = 186;
+	int j = 0;
+	for (int i = start_month; i < end_month; i++)
+	{
+		if (i == start_month)
+		{
+			if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
+			{
+				Days = 31;
+			}
+			else if (i == 1)
+			{
+				Days = 28;
+			}
+			else if (i == 3 || i == 5 || i == 8 || i == 10)
+			{
+				Days = 30;
+			}
+			for (j = start_date; j < Days; j++)
+			{
+				for (int k = 0; k < 24; k++)
+				{
+					if (Calender[i][j][k] != NULL)
+					{
+						for (int l = 0; Calender[i][j][k][l].title == ""; l++)
+						{
+							count++;
+						}
+					}
+				}
+			}
+		}
+	}
+	cout << "The long time period in which the user is free is: " << count << endl;
 }
 
 void Important_activities(Activity**** Calender) {
