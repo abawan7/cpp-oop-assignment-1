@@ -1,3 +1,7 @@
+//Abdullah Awan
+//Roll no: 21L-7713
+//Section BSCS 2J
+
 #include <iostream>
 #include<stdio.h>
 #include <windows.h>
@@ -379,7 +383,7 @@ void list_of_users(Activity**** Calender) {
 }
 
 void longest_free_period(Activity**** Calender) {
-	string User_Id;
+	int User_Id;
 	int count = 0, Days = 0;
 	int position;
 	string start = "01/01", end = "30/12";
@@ -399,7 +403,12 @@ void longest_free_period(Activity**** Calender) {
 	end_date = atoi((end.substr(0, position)).c_str());
 	end.erase(0, position + 1);
 	end_month = atoi((end.substr(0, position + 1)).c_str());
-	count = 186;
+	if (User_Id == 1) {
+		count = 186;
+	}
+	else if (User_Id == 2) {
+		count = 32;
+	}
 	int j = 0;
 	for (int i = start_month; i < end_month; i++)
 	{
@@ -932,7 +941,10 @@ int main()
 	}
 	else {
 		cout << "File created successfully!" << endl;
-		cout << "User Are Given Below: " << endl;
+		cout << "User Are Given Below Are Given Below: " << endl;
+		cout << "09/10,11,14,user1,act33,Gym,0.99" << endl;
+		cout << "10/11,10,12,user2,act34,Study,0.1" << endl;
+		cout << "02/09,18,20,user1,act28,Cricket,0.80" << endl;
 		activity << "09/10,11,14,user1,act33,Gym,0.99" << endl;
 		activity << "10/11,10,12,user2,act34,Study,0.1" << endl;
 		activity << "02/09,18,20,user1,act28,Cricket,0.80" << endl;
