@@ -1,7 +1,3 @@
-//Abdullah Awan
-//Roll no: 21L-7713
-//Section BSCS 2J
-
 #include <iostream>
 #include<stdio.h>
 #include <windows.h>
