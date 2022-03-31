@@ -4,6 +4,7 @@
 #include <cwchar>
 #include <string>
 #include <fstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ void setCursorPointer(int x = 0, int y = 0)
 	SetConsoleCursorPosition(handle, coordinates);
 }
 
-void split(string& act, Activity**** Calender)
+void split(string& act, Activity***** Calender)
 {
 	int Day, Months;
 	int Start_time, End_time, Position;
@@ -74,45 +75,34 @@ void split(string& act, Activity**** Calender)
 	int Duration = End_time - Start_time;
 
 	int n = 0;
-	if (Calender[Months][Day][Start_time] != NULL)
+	Activity* activity = new Activity();
+	if (Calender[Months][Day][Start_time][n] != NULL) {
+		n = 1;
+		activity->activity_Id = Activity_Id;
+		activity->user_Id = User_Id;
+		activity->duration = Duration;
+		activity->title = Title;
+		activity->priority = Priority;
+		Calender[Months][Day][Start_time][n] = activity;
+	}
+	if (Calender[Months][Day][Start_time][n] == NULL)
 	{
-		for (int i = 0; Calender[Months][Day][Start_time][i].title != ""; i++)
-		{
-			n++;
-		}
-		n++;
-		for (int i = (n - 2); i < n; i++)
-		{
-			if (i != (n - 1))
-			{
-				Calender[Months][Day][Start_time][i].activity_Id = Activity_Id;
-				Calender[Months][Day][Start_time][i].user_Id = User_Id;
-				Calender[Months][Day][Start_time][i].title = Title;
-				Calender[Months][Day][Start_time][i].priority = Priority;
-				Calender[Months][Day][Start_time][i].duration = Duration;
-			}
+		activity->activity_Id = Activity_Id;
+		activity->user_Id = User_Id;
+		activity->duration = Duration;
+		activity->title = Title;
+		activity->priority = Priority;
 
-			if (i == (n - 1))
-			{
-				Calender[Months][Day][Start_time][i].title = "";
-			}
-		}
+		Calender[Months][Day][Start_time][n] = activity;
 	}
-	if (Calender[Months][Day][Start_time] == NULL)
-	{
-		n = 0;
-		Calender[Months][Day][Start_time] = new Activity[n + 2];
-		Calender[Months][Day][Start_time][n].activity_Id = Activity_Id;
-		Calender[Months][Day][Start_time][n].user_Id = User_Id;
-		Calender[Months][Day][Start_time][n].title = Title;
-		Calender[Months][Day][Start_time][n].priority = Priority;
-		Calender[Months][Day][Start_time][n].duration = Duration;
-		Calender[Months][Day][Start_time][n + 1].title = "";
-	}
-	cout << "Duration: " << Calender[Months][Day][Start_time]->duration << " User Id: " << Calender[Months][Day][Start_time]->user_Id << " Activity Id: " << Calender[Months][Day][Start_time]->activity_Id << " title: " << Calender[Months][Day][Start_time]->title << " Priority: " << Calender[Months][Day][Start_time]->priority << endl;
+	
+	cout << "Stored In Calender" << endl;
+
+	cout << "Activity: " << Calender[Months][Day][Start_time][n]->activity_Id << "  User Id: " << Calender[Months][Day][Start_time][n]->user_Id << "  Priority: " << Calender[Months][Day][Start_time][n]->priority;
+	cout << "  Title: " << Calender[Months][Day][Start_time][n]->title << "  Duration: " << Calender[Months][Day][Start_time][n]->duration << endl;
 }
 
-void list_all_activity(Activity**** Calender) {
+void list_all_activity(Activity***** Calender) {
 	string User_Id;
 	int count = 0, Days = 0;
 	int position;
@@ -142,31 +132,30 @@ void list_all_activity(Activity**** Calender) {
 	int j = 0;
 	for (int i = start_month; i < end_month; i++)
 	{
-		if (i == start_month)
+		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
 		{
-			if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
+			Days = 31;
+		}
+		else if (i == 1)
+		{
+			Days = 28;
+		}
+		else if (i == 3 || i == 5 || i == 8 || i == 10)
+		{
+			Days = 30;
+		}
+		for (j = start_date; j < Days; j++)
+		{
+			for (int k = 0; k < 24; k++)
 			{
-				Days = 31;
-			}
-			else if (i == 1)
-			{
-				Days = 28;
-			}
-			else if (i == 3 || i == 5 || i == 8 || i == 10)
-			{
-				Days = 30;
-			}
-			for (j = start_date; j < Days; j++)
-			{
-				for (int k = 0; k < 24; k++)
-				{
-					if (Calender[i][j][k] != NULL)
+				for (int l = 0; l < 1; l++) {
+					if (Calender[i][j][k][l] != NULL)
 					{
-						for (int l = 0; Calender[i][j][k][l].title != ""; l++)
+						for (int z = 0; Calender[i][j][k][l][z].title != ""; z++)
 						{
-							if (User_Id == (Calender[i][j][k][l].user_Id))
+							if (User_Id == (Calender[i][j][k][l][z].user_Id))
 							{
-								cout << Calender[i][j][k][l].title << endl;
+								cout << Calender[i][j][k][l][z].title << endl;
 								count++;
 							}
 						}
@@ -181,7 +170,7 @@ void list_all_activity(Activity**** Calender) {
 	}
 }
 
-void Print_activity_stats(Activity**** Calender) {
+void Print_activity_stats(Activity***** Calender) {
 	int count = 0;
 	float total;
 	float avg = 0;
@@ -190,7 +179,7 @@ void Print_activity_stats(Activity**** Calender) {
 	int month;
 	cout << "Enter Month Number: " << endl;
 	cin >> month;
-
+	month -= 1;
 
 	if (month == 0 || month == 2 || month == 4 || month == 6 || month == 7 || month == 9 || month == 11)
 	{
@@ -208,9 +197,8 @@ void Print_activity_stats(Activity**** Calender) {
 	{
 		for (int k = 0; k < 24; k++)
 		{
-			if (Calender[month][j][k] != NULL)
-			{
-				for (int l = 0; Calender[month][j][k][l].title != ""; l++)
+			for (int l = 0; l < 1; l++) {
+				if (Calender[month][j][k][l] != NULL)
 				{
 					count++;
 				}
@@ -234,7 +222,7 @@ void Print_activity_stats(Activity**** Calender) {
 		Days = 30;
 		avg = total / Days;
 	}
-	cout << "The Total Number of Activities in the Year are : " << total << endl;
+	cout << "The Total Number of Activities in the Month are : " << total << endl;
 	cout << "The Average Number of Activities Per Month are : " << avg << endl;
 
 	int day_act = 0;
@@ -259,22 +247,21 @@ void Print_activity_stats(Activity**** Calender) {
 	{
 		for (int k = 0; k < 24; k++)
 		{
-			if (Calender[month][j][k] != NULL)
-			{
-				for (int l = 0; Calender[month][j][k][l].title != ""; l++)
+			for (int l = 0; l < 1; l++) {
+				if (Calender[month][j][k][l] != NULL)
 				{
 					curr_day++;
 					yex++;
 				}
 			}
 		}
+		if (high_day < curr_day) {
+			high_day = curr_day;
+			buzy_day = j;
+			day_act = yex;
+		}
 	}
-	if (high_day < curr_day)
-	{
-		high_day = curr_day;
-		day_act = curr_day;
-		buzy_day = month;
-	}
+	
 
 	if (yex > 0)
 	{
@@ -301,12 +288,14 @@ void Print_activity_stats(Activity**** Calender) {
 	{
 		for (int k = 0; k < 24; k++)
 		{
-			if (Calender[month][j][k] != NULL)
-			{
-				for (int l = 0; Calender[month][j][k][l].title != ""; l++)
+			for (int l = 0; l < 1; l++) {
+				if (Calender[month][j][k][l] != NULL)
 				{
-					priority = Calender[month][j][k][l].priority;
-					count1++;
+					for (int z = 0; Calender[month][j][k][l][z].title != ""; z++)
+					{
+						priority += Calender[month][j][k][l][z].priority;
+						count1++;
+					}
 				}
 			}
 		}
@@ -316,11 +305,21 @@ void Print_activity_stats(Activity**** Calender) {
 
 }
 
-void list_of_users(Activity**** Calender) {
+void list_of_users(Activity***** Calender) {
 	int count = 0, Days = 0;
 	int position;
 	string start, end;
 	int start_month = 0, end_month = 0, start_date = 0, end_date = 0;
+	int U = 0;;
+
+	cout << "Enter Users: " << endl;
+	cin >> U;
+
+	string *arr = new string [U];
+	for (int i = 0; i < U; i++) {
+		cout << "Enter User " << i << " : ";
+		cin >> arr[i];
+	}
 
 	cout << "Enter the Start Date :" << endl;
 	cin >> start;
@@ -343,50 +342,48 @@ void list_of_users(Activity**** Calender) {
 	int j = 0;
 	for (int i = start_month; i < end_month; i++)
 	{
-		if (i == start_month)
+		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
 		{
-			if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
+			Days = 31;
+		}
+		else if (i == 1)
+		{
+			Days = 28;
+		}
+		else if (i == 3 || i == 5 || i == 8 || i == 10)
+		{
+			Days = 30;
+		}
+		for (j = start_date; j < end_date; j++)
+		{
+			for (int k = 0; k < 24; k++)
 			{
-				Days = 31;
-			}
-			else if (i == 1)
-			{
-				Days = 28;
-			}
-			else if (i == 3 || i == 5 || i == 8 || i == 10)
-			{
-				Days = 30;
-			}
-			for (j = start_date; j < Days; j++)
-			{
-				for (int k = 0; k < 24; k++)
-				{
-					if (Calender[i][j][k] != NULL)
-					{
-						for (int l = 0; Calender[i][j][k][l].title == ""; l++)
-						{
-							cout << "User: " << Calender[i][j][k][l].user_Id << endl;
-						}
+				for (int l = 0; l < 1; l++) {
+				 
+					if (Calender[i][j][k][l] == NULL)
+					{	
+						cout << "Users Are Free In " << j + 1 << "/" << i + 1 << " " << k+1 << endl;
 					}
 				}
 			}
 		}
 	}
-	if (count == 0)
-	{
-		cout << "No User Is Free " << endl;
-	}
 }
 
-void longest_free_period(Activity**** Calender) {
-	int User_Id;
-	int count = 0, Days = 0;
+void longest_free_period(Activity***** Calender) {
+	string User_Id;
+	int count = 0, Days = 0, act = 0;
 	int position;
-	string start = "01/01", end = "30/12";
+	string start, end;
 	int start_month = 0, end_month = 0, start_date = 0, end_date = 0;
+	bool flag = false;
 
-	cout << "Enter the ID of the User whose Activities are to be Displayed" << endl;
-	cin >> User_Id;;
+	cout << "Enter the ID of the User" << endl;
+	cin >> User_Id;
+	cout << "Enter the Start Date :" << endl;
+	cin >> start;
+	cout << "Enter the End Date :" << endl;
+	cin >> end;
 
 	position = start.find('/');
 	start_date = atoi((start.substr(0, position)).c_str());
@@ -399,55 +396,69 @@ void longest_free_period(Activity**** Calender) {
 	end_date = atoi((end.substr(0, position)).c_str());
 	end.erase(0, position + 1);
 	end_month = atoi((end.substr(0, position + 1)).c_str());
-	if (User_Id == 1) {
-		count = 186;
-	}
-	else if (User_Id == 2) {
-		count = 32;
-	}
 	int j = 0;
 	for (int i = start_month; i < end_month; i++)
 	{
-		if (i == start_month)
+		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
 		{
-			if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
+			Days = 31;
+		}
+		else if (i == 1)
+		{
+			Days = 28;
+		}
+		else if (i == 3 || i == 5 || i == 8 || i == 10)
+		{
+			Days = 30;
+		}
+		for (j = start_date; j < Days; j++)
+		{
+			flag = false;
+			for (int k = 0; k < 24; k++)
 			{
-				Days = 31;
-			}
-			else if (i == 1)
-			{
-				Days = 28;
-			}
-			else if (i == 3 || i == 5 || i == 8 || i == 10)
-			{
-				Days = 30;
-			}
-			for (j = start_date; j < Days; j++)
-			{
-				for (int k = 0; k < 24; k++)
-				{
-					if (Calender[i][j][k] != NULL)
+				for (int l = 0; l < 1; l++) {
+					if (Calender[i][j][k][l] != NULL)
 					{
-						for (int l = 0; Calender[i][j][k][l].title == ""; l++)
+						for (int z = 0; Calender[i][j][k][l][z].title != ""; z++)
 						{
-							count++;
+							if (User_Id == (Calender[i][j][k][l][z].user_Id))
+							{
+								act++;
+								flag = true;
+							}
 						}
 					}
 				}
 			}
+			if (flag == true) {
+				count--;
+				if (act == 2) {
+					break;
+				}
+				
+			}
+			else {
+				count++;
+			}
+			if (act == 2) {
+				break;
+			}
+		}
+		if (act == 2) {
+			break;
 		}
 	}
 	cout << "The long time period in which the user is free is: " << count << endl;
 }
 
-void Important_activities(Activity**** Calender) {
+void Important_activities(Activity***** Calender) {
 	string User_Id;
 	int count = 0, Days = 0;
 	int position;
 	string start, end;
 	int start_month = 0, end_month = 0, start_date = 0, end_date = 0;
 
-	cout << "Enter the ID of the User whose Activities are to be Displayed" << endl;
+	cout << "Enter the ID of the User whose Top 5 Activities are to be Displayed" << endl;
 	cin >> User_Id;
 	cout << "Enter the Start Date :" << endl;
 	cin >> start;
@@ -466,76 +477,78 @@ void Important_activities(Activity**** Calender) {
 	end.erase(0, position + 1);
 	end_month = atoi((end.substr(0, position + 1)).c_str());
 
-	cout << endl << "The List of the User Activities is" << endl;
+	cout << endl << "The Top 5 Activities of the User are" << endl;
 	int j = 0;
-	if (count <= 5) {
-		for (int i = start_month; i < end_month; i++)
+	for (int i = start_month; i < end_month; i++)
+	{
+		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
 		{
-			if (i == start_month)
+			Days = 31;
+		}
+		else if (i == 1)
+		{
+			Days = 28;
+		}
+		else if (i == 3 || i == 5 || i == 8 || i == 10)
+		{
+			Days = 30;
+		}
+		for (j = start_date; j < Days; j++)
+		{
+			for (int k = 0; k < 24; k++)
 			{
-				if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
-				{
-					Days = 31;
-				}
-				else if (i == 1)
-				{
-					Days = 28;
-				}
-				else if (i == 3 || i == 5 || i == 8 || i == 10)
-				{
-					Days = 30;
-				}
-				for (j = start_date; j < Days; j++)
-				{
-					for (int k = 0; k < 24; k++)
+				for (int l = 0; l < 1; l++) {
+					if (Calender[i][j][k][l] != NULL)
 					{
-						if (Calender[i][j][k] != NULL)
+						for (int z = 0; Calender[i][j][k][l][z].title != ""; z++)
 						{
-							for (int l = 0; Calender[i][j][k][l].title != ""; l++)
+							if (User_Id == (Calender[i][j][k][l][z].user_Id))
 							{
-								if (User_Id == (Calender[i][j][k][l].user_Id))
-								{
-									cout << Calender[i][j][k][l].title << endl;
-									count++;
-								}
+								count++;
 							}
 						}
+						
 					}
 				}
 			}
 		}
+	}
+	if (count > 0)
+	{
+		Activity* arr = new Activity[count];
 		int counter = 0;
 		float prt[5000] = { 0 };
-		if (count > 0) {
-			for (int i = start_month; i < end_month; i++)
+		for (int i = start_month; i < end_month; i++)
+		{
+			if (start_month == end_month - 1)
 			{
-				if (start_month == end_month - 1)
+				if (i == start_month)
 				{
-					if (i == start_month)
+					if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
 					{
-						if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
+						Days = 31;
+					}
+					else if (i == 1)
+					{
+						Days = 28;
+					}
+					else if (i == 3 || i == 5 || i == 8 || i == 10)
+					{
+						Days = 30;
+					}
+					for (j = start_date; j < Days; j++)
+					{
+						for (int k = 0; k < 24; k++)
 						{
-							Days = 31;
-						}
-						else if (i == 1)
-						{
-							Days = 28;
-						}
-						else if (i == 3 || i == 5 || i == 8 || i == 10)
-						{
-							Days = 30;
-						}
-						for (j = start_date; j < Days; j++)
-						{
-							for (int k = 0; k < 24; k++)
-							{
+							for (int z = 0; z < 1; z++) {
 								if (Calender[i][j][k] != NULL)
 								{
-									for (int l = 0; Calender[i][j][k][l].title != ""; l++)
+									for (int l = 0; Calender[i][j][k][l][z].title != ""; l++)
 									{
-										if (User_Id == (Calender[i][j][k][l].user_Id))
+										if (User_Id == (Calender[i][j][k][l][z].user_Id))
 										{
-											prt[counter] = Calender[i][j][k][l].priority;
+											arr[counter].title.assign((Calender[i][j][k][l][z].title));
+											prt[counter] = Calender[i][j][k][l][z].priority;
 											counter++;
 										}
 									}
@@ -544,55 +557,129 @@ void Important_activities(Activity**** Calender) {
 						}
 					}
 				}
-				for (int i = 0; i < counter; i++)
+			}
+			else
+			{
+				if (i == start_month)
 				{
-					j = i + 1;
-					while (j < counter)
+					if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
 					{
-						if (prt[i] < prt[i + j])
+						Days = 31;
+					}
+					else if (i == 1)
+					{
+						Days = 28;
+					}
+					else if (i == 3 || i == 5 || i == 8 || i == 10)
+					{
+						Days = 30;
+					}
+					for (j = start_date; j < Days; j++)
+					{
+						for (int k = 0; k < 24; k++)
 						{
-							swap(prt[i], prt[i + j]);
+							for (int z = 0; z < 1; z++) {
+								if (Calender[i][j][k][z] != NULL)
+								{
+									for (int l = 0; Calender[i][j][k][z][l].title != ""; l++)
+									{
+										if (User_Id == (Calender[i][j][k][z][l].user_Id))
+										{
+											arr[counter].title.assign((Calender[i][j][k][z][l].title));
+											prt[counter] = Calender[i][j][k][z][l].priority;
+											counter++;
+										}
+									}
+								}
+							}
 						}
-						j++;
 					}
 				}
-				for (int i = 0; i < counter && i < 5; i++)
+				if (i != start_month && i != (end_month - 1))
 				{
-					cout << prt[i] << endl;
+					if (i == 2 || i == 4 || i == 6 || i == 7 || i == 9)
+					{
+						Days = 31;
+					}
+					else if (i == 1)
+					{
+						Days = 28;
+					}
+					else if (i == 3 || i == 5 || i == 8 || i == 10)
+					{
+						Days = 30;
+					}
+					for (j = 0; j < Days; j++)
+					{
+						for (int k = 0; k < 24; k++)
+						{
+							for (int z = 0; z < 1; z++) {
+								if (Calender[i][j][k][z] != NULL)
+								{
+									for (int l = 0; Calender[i][j][k][z][l].title != ""; l++)
+									{
+										if (User_Id == (Calender[i][j][k][z][l].user_Id))
+										{
+											arr[counter].title.assign((Calender[i][j][k][z][l].title));
+											prt[counter] = Calender[i][j][k][z][l].priority;
+											counter++;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				if (i == (end_month - 1))
+				{
+					for (j = 0; j < end_date; j++)
+					{
+						for (int k = 0; k < 24; k++)
+						{
+							for (int z = 0; z < 1; z++) {
+								if (Calender[i][j][k][z] != NULL)
+								{
+									for (int l = 0; Calender[i][j][k][z][l].title != ""; l++)
+									{
+										if (User_Id == (Calender[i][j][k][z][l].user_Id))
+										{
+											arr[counter].title.assign((Calender[i][j][k][z][l].title));
+											prt[counter] = Calender[i][j][k][z][l].priority;
+											counter++;
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
-		else if (count == 0)
+		for (int i = 0; i < counter; i++)
 		{
-			cout << "The User Has No Activity In this Time Span" << endl;
+			j = i + 1;
+			while (j < counter)
+			{
+				if (prt[i] < prt[i + j])
+				{
+					swap(prt[i], prt[i + j]);
+					swap(arr[i].title, arr[i + j].title);
+				}
+				j++;
+			}
 		}
-	}
-}
-
-bool ID_Remover(Activity*& Calender, int& l)
-{
-	bool flag = true;
-	int i = 0, j = 0;
-	for (i = 0; Calender[i].title != ""; i++);
-	{
-	}
-	if (i == 1)
-	{
-		Calender[0].title.assign("");
+		for (int i = 0; i < counter && i < 5; i++)
+		{
+			cout << arr[i].title << " (" << prt[i] << ")" << endl;
+		}
 	}
 	else
 	{
-		for (i = 0; Calender[i].title != ""; i++);
-		{
-			if (i >= l)
-			{
-				Calender[i] = Calender[i + 1];
-			}
-		}
+		cout << "There is no Activity of the user During this Time Period." << endl;
 	}
-	return flag;
 }
-void Remove_user(Activity**** Calender)
+
+void Remove_user(Activity***** Calender)
 {
 	int count = 0;
 	int Days = 0;
@@ -618,21 +705,14 @@ void Remove_user(Activity**** Calender)
 		{
 			for (int k = 0; k < 24; k++)
 			{
-				if (Calender[i][j][k] != NULL)
-				{
-					for (int l = 0; flag && Calender[i][j][k][l].title != ""; l++)
+				for (int l = 0; l < 1; l++) {
+					if (Calender[i][j][k][l] != NULL)
 					{
-						if (Calender[i][j][k][l].user_Id == User_id)
-						{
-							ID_Remover(Calender[i][j][k], l);
-							l--;
+						if (User_id == Calender[i][j][k][l][0].user_Id) {
+							Calender[i][j][k][l] = NULL;
 						}
 					}
-					if (Calender[i][j][k][0].title.compare("") == 0)
-					{
-						delete[]Calender[i][j][k];
-						Calender[i][j][k] = NULL;
-					}
+					
 				}
 			}
 		}
@@ -640,7 +720,7 @@ void Remove_user(Activity**** Calender)
 	cout << endl << "All the Data of User " << User_id << " has been removed" << endl;
 }
 
-void Calendar_Stats(Activity**** Calender) {
+void Calendar_Stats(Activity***** Calender) {
 	int count = 0;
 	float total;
 	float avg = 0;
@@ -665,9 +745,8 @@ void Calendar_Stats(Activity**** Calender) {
 		{
 			for (int k = 0; k < 24; k++)
 			{
-				if (Calender[i][j][k] != NULL)
-				{
-					for (int l = 0; Calender[i][j][k][l].title != ""; l++)
+				for (int l = 0; l < 1; l++) {
+					if (Calender[i][j][k][l] != NULL)
 					{
 						count++;
 					}
@@ -704,12 +783,12 @@ void Calendar_Stats(Activity**** Calender) {
 		{
 			for (int k = 0; k < 24; k++)
 			{
-				if (Calender[i][j][k] != NULL)
-				{
-					for (int l = 0; Calender[i][j][k][l].title != ""; l++)
+				for (int l = 0; l < 1; l++) {
+					if (Calender[i][j][k][l] != NULL)
 					{
 						curr_month++;
 						yex++;
+
 					}
 				}
 			}
@@ -729,10 +808,12 @@ void Calendar_Stats(Activity**** Calender) {
 	}
 }
 
-void Save_calendar(Activity**** Calender)
+void Save_calendar(Activity***** Calender)
 {
 	int Days = 0;
-	ofstream Write("Activiy");
+	bool flag = true;
+	int count = 0;
+	ofstream Write("Data");
 	for (int i = 0; i < 12; i++)
 	{
 		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
@@ -751,14 +832,14 @@ void Save_calendar(Activity**** Calender)
 		{
 			for (int k = 0; k < 24; k++)
 			{
-				if (Calender[i][j][k] != NULL)
-				{
-					for (int l = 0; Calender[i][j][k][l].title != ""; l++)
+				for (int l = 0; l < 1; l++) {
+					if (Calender[i][j][k][l] != NULL)
 					{
 						Write << j + 1 << "/" << i + 1 << "," << k
-							<< "," << k + Calender[i][j][k][l].duration << "," << "user" << Calender[i][j][k][l].user_Id
-							<< "," << Calender[i][j][k][l].activity_Id << "," << Calender[i][j][k][l].title
-							<< "," << Calender[i][j][k][l].priority << endl;
+							<< "," << k + Calender[i][j][k][l][0].duration << "," << "user" << Calender[i][j][k][l][0].user_Id
+							<< "," << Calender[i][j][k][l][0].activity_Id << "," << Calender[i][j][k][l][0].title
+							<< "," << Calender[i][j][k][l][0].priority << endl;
+
 					}
 				}
 			}
@@ -767,21 +848,22 @@ void Save_calendar(Activity**** Calender)
 	cout << "Calender Saved /_" << endl;
 }
 
-void Print_Calender_Month(Activity**** Calender)
+void Print_Calender_Month(Activity***** Calender)
 {
 	int i;
 	cout << "Enter Month: " << endl;
 	cin >> i;
-
+	i -= 1;
 	system("cls");
 
 	int x = 0;
 	int y = 0;
 	int Days = 0;
 
-	int cx = 0, px = 0, py = 0, count = 0;
-	bool flag = true;
 
+
+	int cx = 0, px = 0, py = 0, count = 0;
+	bool flag = false;
 
 	if (i == 1)
 	{
@@ -858,17 +940,53 @@ void Print_Calender_Month(Activity**** Calender)
 	x = 9;
 	y = 2;
 	cx = 0;
-	for (int j = 1; j <= Days; j++)
-	{
-		setCursorPointer(x, y);
-		cout << j;
-		x = x + 3;
-		if (x == 21 || x == 45 || x == 69)
-		{
-			x = cx;
-			y++;
-		}
 
+	if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
+	{
+		Days = 31;
+	}
+	else if (i == 1)
+	{
+		Days = 28;
+	}
+	else if (i == 3 || i == 5 || i == 8 || i == 10)
+	{
+		Days = 30;
+	}
+	for (int j = 0; j < Days; j++)
+	{
+		flag = false;
+		for (int k = 0; k < 24; k++)
+		{
+			for (int l = 0; l < 1; l++) {
+				if (Calender[i][j][k][l] != NULL)
+				{
+				
+					setCursorPointer(x, y);
+					cout << "'" << j + 1;
+					x = x + 3;
+					if (x == 21)
+					{
+						x = cx;
+						y++;
+					}
+					flag = true;
+				}
+			}
+			if (flag == true) {
+				break;
+			}
+		}
+		if (flag == false){
+			setCursorPointer(x, y);
+			cout << j + 1;
+			x = x + 3;
+			if (x == 21)
+			{
+				x = cx;
+				y++;
+			}
+		}
 	}
 
 	setCursorPointer(px, 1);
@@ -892,6 +1010,77 @@ void Print_Calender_Month(Activity**** Calender)
 	setCursorPointer(px, 1);
 	cout << "S";
 	cout << endl << endl << endl << endl << endl << endl;
+}
+
+void Clashing_Activity(Activity***** Calender) {
+	int count = 0, Days = 0;
+	int position;
+	string start, end;
+	int D = 0;
+	int start_month = 0, end_month = 0, start_date = 0, end_date = 0;
+	
+	string user_id1, user_id2;
+	cout << "Enter User 1: ";
+	cin >> user_id1;
+	cout << "Enter User 2";
+	cin >> user_id2;
+
+	cout << "Enter the Start Date :" << endl;
+	cin >> start;
+	cout << "Enter the End Date :" << endl;
+	cin >> end;
+
+	position = start.find('/');
+	start_date = atoi((start.substr(0, position)).c_str());
+	start_date--;
+	start.erase(0, position + 1);
+	start_month = atoi((start.substr(0, position + 1)).c_str());
+	start_month--;
+
+	position = end.find('/');
+	end_date = atoi((end.substr(0, position)).c_str());
+	end.erase(0, position + 1);
+	end_month = atoi((end.substr(0, position + 1)).c_str());
+
+	for (int i = start_month; i < end_month; i++)
+	{
+		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
+		{
+			D = 31;
+		}
+		else if (i == 1)
+		{
+			D = 28;
+		}
+		else if (i == 3 || i == 5 || i == 8 || i == 10)
+		{
+			D = 30;
+		}
+		for (int j = start_date; j < D; j++)
+		{
+			for (int k = 0; k < 24; k++)
+			{
+				for (int l = 0; l < 1; l++) {
+					if (Calender[i][j][k][l] != NULL)
+					{
+						for (int z = 0; Calender[i][j][k][l][z].title != ""; z++)
+						{
+							if (user_id1 == (Calender[i][j][k][l][0].user_Id) && user_id2 == (Calender[i][j][k][l][1].user_Id))
+							{
+								cout << Calender[i][j][k][l][0].title << endl;
+								cout << Calender[i][j][k][l][1].title << endl;
+								count++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	if (count == 0)
+	{
+		cout << "The User Has No Clash In this Time Span" << endl;
+	}
 
 }
 
@@ -902,8 +1091,9 @@ int main()
 	int Days = 0;
 	int Monthss = 12;
 	int hours = 24;
-	Activity**** Calender;
-	Calender = new Activity * **[Monthss];
+	int act = 5;
+	Activity***** Calender;
+	Calender = new Activity ****[Monthss];
 	for (int i = 0; i < Monthss; i++)
 	{
 		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
@@ -918,43 +1108,31 @@ int main()
 		{
 			Days = 30;
 		}
-		Calender[i] = new Activity * *[Days];
+		Calender[i] = new Activity ***[Days];
 		for (int j = 0; j < Days; j++)
 		{
-			Calender[i][j] = new Activity * [hours];
+			Calender[i][j] = new Activity ** [hours];
 			for (int k = 0; k < hours; k++)
 			{
-				Calender[i][j][k] = NULL;
+				Calender[i][j][k] = new Activity *[act];
+				for (int l = 0; l < 5; l++) {
+					Calender[i][j][k][l] = NULL;
+				}
 			}
 		}
 	}
-	string act;
-
-	fstream activity;
-	activity.open("Activity", ios::out);
-	if (!activity) {
-		cout << "File not created!" << endl;
-	}
-	else {
-		cout << "File created successfully!" << endl;
-		cout << "User Are Given Below Are Given Below: " << endl;
-		cout << "09/10,11,14,user1,act33,Gym,0.99" << endl;
-		cout << "10/11,10,12,user2,act34,Study,0.1" << endl;
-		cout << "02/09,18,20,user1,act28,Cricket,0.80" << endl;
-		activity << "09/10,11,14,user1,act33,Gym,0.99" << endl;
-		activity << "10/11,10,12,user2,act34,Study,0.1" << endl;
-		activity << "02/09,18,20,user1,act28,Cricket,0.80" << endl;
-		activity.close();
-	}
+	string line;
 
 	ifstream Fetch("Activity");
 	if (Fetch.is_open())
 	{
-		while (getline(Fetch, act))
+		while (getline(Fetch, line))
 		{
-			split(act, Calender);
+			split(line, Calender);
 		}
+		Fetch.close();
 	}
+
 	while (1)
 	{
 		int choice;
@@ -967,7 +1145,8 @@ int main()
 		cout << "6) Print Calendar Stats (for the whole year)" << endl;
 		cout << "7) Remove a user from the calendar" << endl;
 		cout << "8) Save the calendar" << endl;
-		cout << "9) Print the calendar month." << endl << endl;
+		cout << "9) Print the calendar month." << endl;
+		cout << "Enter -1 To Exit" << endl << endl;
 		cout << "Please Choice (1 - 9): ";
 		cin >> choice;
 		cout << endl;
@@ -1006,10 +1185,46 @@ int main()
 		else if (choice == 9) {
 			Print_Calender_Month(Calender);
 		}
+		else if (choice == 10) {
+			Clashing_Activity(Calender);
+		}
+		else if (choice == -1) {
+			break;
+		}
 		else
 		{
 			cout << "Invalid Value.. Try Again" << endl;
 		}
 	}
+	for (int i = 0; i < Monthss; i++)
+	{
+		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
+		{
+			Days = 31;
+		}
+		else if (i == 1)
+		{
+			Days = 28;
+		}
+		else if (i == 3 || i == 5 || i == 8 || i == 10)
+		{
+			Days = 30;
+		}
+		for (int j = 0; j < Days; j++)
+		{
+			Calender[i][j] = new Activity * *[hours];
+			for (int k = 0; k < hours; k++)
+			{
+				Calender[i][j][k] = new Activity * [act];
+				for (int l = 0; l < 5; l++) {
+					delete[]Calender[i][j][k][l];
+				}
+				delete[]Calender[i][j][k];
+			}
+			delete[]Calender[i][j];
+		}
+		delete[]Calender[i];
+	}
+	delete[]Calender;
 	return 0;
 }
