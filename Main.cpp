@@ -1022,7 +1022,7 @@ void Clashing_Activity(Activity***** Calender) {
 	string user_id1, user_id2;
 	cout << "Enter User 1: ";
 	cin >> user_id1;
-	cout << "Enter User 2";
+	cout << "Enter User 2: ";
 	cin >> user_id2;
 
 	cout << "Enter the Start Date :" << endl;
@@ -1041,7 +1041,7 @@ void Clashing_Activity(Activity***** Calender) {
 	end_date = atoi((end.substr(0, position)).c_str());
 	end.erase(0, position + 1);
 	end_month = atoi((end.substr(0, position + 1)).c_str());
-
+	bool flag = false;
 	for (int i = start_month; i < end_month; i++)
 	{
 		if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11)
@@ -1060,7 +1060,7 @@ void Clashing_Activity(Activity***** Calender) {
 		{
 			for (int k = 0; k < 24; k++)
 			{
-				for (int l = 0; l < 5; l++) {
+				for (int l = 0; l < 1; l++) {
 					if (Calender[i][j][k][l] != NULL)
 					{
 						for (int z = 0; Calender[i][j][k][l][z].title != ""; z++)
@@ -1070,12 +1070,25 @@ void Clashing_Activity(Activity***** Calender) {
 								cout << "The User Having a Clash In These " << endl;
 								cout << Calender[i][j][k][l][z].title << endl;
 								cout << Calender[i][j][k][l + 1][z].title << endl;
+								flag = true;
 								count++;
 							}
 						}
 					}
+					if (flag == true) {
+						break;
+					}
+				}
+				if (flag == true) {
+					break;
 				}
 			}
+			if (flag == true) {
+				break;
+			}
+		}
+		if (flag == true) {
+			break;
 		}
 	}
 	if (count == 0)
@@ -1147,6 +1160,7 @@ int main()
 		cout << "7) Remove a user from the calendar" << endl;
 		cout << "8) Save the calendar" << endl;
 		cout << "9) Print the calendar month." << endl;
+		cout << "10) Clashing Activities." << endl;
 		cout << "Enter -1 To Exit" << endl << endl;
 		cout << "Please Choice (1 - 9): ";
 		cin >> choice;
